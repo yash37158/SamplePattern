@@ -1,13 +1,49 @@
-name: SampleApp # display name in Meshery UI
-services:
-  myapp:
-    type: Application
-    namespace: test
-    settings:
-      replicas: 1
+apiVersion: core.oam.dev/v1alpha1
+kind: ApplicationConfiguration
+metadata:
+  name: sample-app
+  namespace: default
+spec:
+  components:
+    - componentName: myapp
+      instanceName: myapp
+      traits:
+        - trait:
+            apiVersion: core.oam.dev/v1alpha1
+            kind: ManualScalerTrait
+            spec:
+              replicaCount: 1
+---
+apiVersion: core.oam.dev/v1alpha1
+kind: Component
+metadata:
+  name: myapp
+  namespace: default
+spec:
+  workload:
+    apiVersion: core.oam.dev/v1alpha1
+    kind: ContainerizedWorkload
+    spec:
       containers:
         - name: meshy
           image: utkarsh23/meshy:v5
           ports:
             - name: http
               containerPort: 8080
+---
+apiVersion: core.oam.dev/v1alpha1
+kind: ApplicationConfiguration
+metadata:
+  name: sample-app-mesh
+  namespace: default
+spec:
+  components:
+    - componentName: myapp
+      instanceName: myapp
+      traits:
+        - trait:
+            apiVersion: core.oam.dev/v1alpha1
+            kind: MeshTrait
+            spec:
+              meshName: istio
+              namespace: istio-system
