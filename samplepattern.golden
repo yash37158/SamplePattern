@@ -7,7 +7,7 @@ services:
       replicas: 1
       containers:
         - name: meshy
-          image: yash37158/meshy:v5
+          image: utkarsh23/meshy:v5
           ports:
             - name: http
               containerPort: 8080
